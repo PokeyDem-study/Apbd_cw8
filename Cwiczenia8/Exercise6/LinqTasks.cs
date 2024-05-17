@@ -296,9 +296,11 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<object> Task10()
         {
-            IEnumerable<object> result = Emps
-                .Select(e => new {e.Ename, e.Job, e.HireDate})
-                .Union();
+            
+            IEnumerable<object> result = Emps.Select(e => new { e.Ename, e.Job, e.HireDate})
+                .Union(
+                    Emps.Select(e => new { Ename = "Brak wartości", Job = (string)null, HireDate = (Nullable<DateTime>)null })
+                    );
             return result;
         }
 
@@ -315,7 +317,8 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<object> Task11()
         {
-            IEnumerable<object> result = null;
+            IEnumerable<object> result = Emps.GroupBy(e => e.Deptno)
+                .Where(g => g.Count() > 1).Select(g => new { name = Depts.First(d => d.Deptno.Equals(g.Key)).Dname, numOfEmployees = g.Count()});
             return result;
         }
 
