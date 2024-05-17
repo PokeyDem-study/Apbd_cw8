@@ -344,7 +344,7 @@ namespace Exercise6
         /// </summary>
         public static int Task13(int[] arr)
         {
-            int result = 0;
+            int result = arr.First(e => arr.Count(num => num==e)%2!=0);
             //result=
             return result;
         }
