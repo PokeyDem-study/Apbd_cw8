@@ -318,7 +318,8 @@ namespace Exercise6
         public static IEnumerable<object> Task11()
         {
             IEnumerable<object> result = Emps.GroupBy(e => e.Deptno)
-                .Where(g => g.Count() > 1).Select(g => new { name = Depts.First(d => d.Deptno.Equals(g.Key)).Dname, numOfEmployees = g.Count()});
+                .Where(g => g.Count() > 1)
+                .Select(g => new { name = Depts.First(d => d.Deptno.Equals(g.Key)).Dname, numOfEmployees = g.Count()});
             return result;
         }
 
@@ -331,7 +332,7 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<Emp> Task12()
         {
-            IEnumerable<Emp> result = null;
+            IEnumerable<Emp> result = Emps.GetMgrsWithAtLeastOneEmployee();
             return result;
         }
 
@@ -344,8 +345,7 @@ namespace Exercise6
         /// </summary>
         public static int Task13(int[] arr)
         {
-            int result = arr.First(e => arr.Count(num => num==e)%2!=0);
-            //result=
+            int result = arr.First(e => arr.Count(num => num == e) % 2 != 0);
             return result;
         }
 
@@ -355,8 +355,11 @@ namespace Exercise6
         /// </summary>
         public static IEnumerable<Dept> Task14()
         {
-            IEnumerable<Dept> result = null;
-            //result =
+            IEnumerable<Dept> result = Depts
+                .Where(d => Emps.Count(e => e.Deptno.Equals(d.Deptno)) == 5
+                            || !Emps.Any(e => e.Deptno.Equals(d.Deptno)))
+                .OrderBy(d => d.Dname);
+                
             return result;
         }
     }
@@ -364,5 +367,13 @@ namespace Exercise6
     public static class CustomExtensionMethods
     {
         //Put your extension methods here
+        public static IEnumerable<Emp> GetMgrsWithAtLeastOneEmployee(this IEnumerable<Emp> employees)
+        {
+            var result = employees
+                .Where(e => employees.Count(es => es.Mgr != null && es.Mgr.Equals(e)) >= 1)
+                .OrderBy(e => e.Ename)
+                .ThenByDescending(e => e.Salary);
+            return result;
+        }
     }
 }
